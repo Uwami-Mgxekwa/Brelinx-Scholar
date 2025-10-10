@@ -19,8 +19,9 @@ public class FaceCheck1 extends javax.swing.JFrame {
     }
 
     public void timer() {
-        new javax.swing.Timer(500, e -> {
-            new FaceCheck1().dispose(); // Replace 'yourFrame' with your actual JFrame instance
+        new javax.swing.Timer(4000, e -> {
+            this.dispose();
+            
         }).start();
     }
 
@@ -36,10 +37,11 @@ public class FaceCheck1 extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/images/Apple Face ID.gif"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-160, 0, 620, 320));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-240, 0, 540, 270));
 
         pack();
         setLocationRelativeTo(null);

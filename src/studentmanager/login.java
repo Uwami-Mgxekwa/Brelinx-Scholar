@@ -33,8 +33,11 @@ public class login extends javax.swing.JFrame {
         cameraView.setSize(320, 240); // You can adjust this size
         cameraView.setVisible(false);
         jPanel1.add(cameraView);
-        loadReferenceHistograms();
-        System.out.println("Reference histograms loaded: " + referenceHistograms.size());
+        new Thread(() -> {
+            loadReferenceHistograms();
+            System.out.println("Reference histograms loaded: " + referenceHistograms.size());
+        }).start();
+        //System.out.println("Reference histograms loaded: " + referenceHistograms.size());
         
     }
     
@@ -83,6 +86,7 @@ public class login extends javax.swing.JFrame {
     
     
     private void detectFace() {
+        
         new Thread(() -> {
             VideoCapture camera = new VideoCapture(1);
             if (!camera.isOpened()) {
@@ -144,11 +148,14 @@ public class login extends javax.swing.JFrame {
             camera.release();
 
             if (faceFound) {
-                JOptionPane.showMessageDialog(this, "Face detected! Login successful.");
+                JOptionPane.showMessageDialog(this, "Welcome Mr Owami! Login successful.");
                 // TODO: Open next JFrame here
-                new Dashboard().setVisible(true);
+                //new Dashboard().setVisible(true);
+                new FaceCheck1().setVisible(true);
+                dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "No face detected. Try again.");
+                JOptionPane.showMessageDialog(this, "This is not my boss Mr Owami. Try again.");
+                new error().setVisible(true);
             }
         }).start();
     }
@@ -236,6 +243,9 @@ public class login extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel8MouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel8MouseEntered(evt);
+            }
         });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -312,7 +322,13 @@ public class login extends javax.swing.JFrame {
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
         // TODO add your handling code here:
         detectFace();
+        
+        
     }//GEN-LAST:event_jLabel8MouseClicked
+
+    private void jLabel8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel8MouseEntered
 
     /**
      * @param args the command line arguments

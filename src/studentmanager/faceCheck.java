@@ -15,6 +15,12 @@ public class faceCheck extends javax.swing.JFrame {
      */
     public faceCheck() {
         initComponents();
+        timer();
+    }
+    public void timer() {
+        new javax.swing.Timer(9000, e -> {
+            this.dispose();
+        }).start();
     }
 
     /**
@@ -29,12 +35,13 @@ public class faceCheck extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/images/download.gif"))); // NOI18N
         jLabel2.setText("jLabel2");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-180, 0, 610, 490));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-180, 0, 610, 390));
 
         pack();
         setLocationRelativeTo(null);
