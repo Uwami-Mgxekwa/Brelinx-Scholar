@@ -154,7 +154,7 @@ public class login extends javax.swing.JFrame {
                 new FaceCheck1().setVisible(true);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "This is not my boss Mr Owami. Try again.");
+                JOptionPane.showMessageDialog(this, "This is not my boss, Mr Owami. Try again.");
                 new error().setVisible(true);
             }
         }).start();
