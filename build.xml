@@ -70,4 +70,10 @@
     nbproject/build-impl.xml file. 
 
     -->
+	<target name="post-jar" depends="jar">
+		<!-- Copy native folder into dist without deleting anything -->
+		<copy todir="${dist.dir}/native" overwrite="true">
+			<fileset dir="native"/>
+		</copy>
+	</target>
 </project>

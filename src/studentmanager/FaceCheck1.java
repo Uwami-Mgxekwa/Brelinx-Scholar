@@ -19,7 +19,7 @@ public class FaceCheck1 extends javax.swing.JFrame {
     }
 
     public void timer() {
-        new javax.swing.Timer(4000, e -> {
+        new javax.swing.Timer(3000, e -> {
             this.dispose();
             
         }).start();

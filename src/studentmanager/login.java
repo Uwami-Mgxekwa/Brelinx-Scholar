@@ -16,12 +16,14 @@ import java.awt.Image;
 import java.awt.Graphics;
 import java.awt.image.DataBufferByte;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
 public class login extends javax.swing.JFrame {
-
+    
     private javax.swing.JLabel cameraView;
     private List<Mat> referenceHistograms = new ArrayList<>();
     private static final double THRESHOLD = 0.3;
@@ -42,36 +44,62 @@ public class login extends javax.swing.JFrame {
     }
     
     private void loadReferenceHistograms() {
-        File folder = new File("src/studentmanager/images"); // adjust path as needed
-        File[] files = folder.listFiles();
-
-        if (files == null || files.length == 0) {
-            System.err.println("No reference images found.");
-            return;
-        }
-
-        CascadeClassifier faceDetector = new CascadeClassifier(new File("src/studentmanager/haarcascade_frontalface_default.xml").getAbsolutePath());
-
-        for (File file : files) {
-            Mat img = Imgcodecs.imread(file.getAbsolutePath());
-            if (img.empty()) continue;
-
-            Mat gray = new Mat();
-            Imgproc.cvtColor(img, gray, Imgproc.COLOR_BGR2GRAY);
-
-            MatOfRect faces = new MatOfRect();
-            faceDetector.detectMultiScale(gray, faces);
-
-            for (Rect rect : faces.toArray()) {
-                Mat face = new Mat(gray, rect);
-                Mat hist = new Mat();
-                Imgproc.calcHist(java.util.Arrays.asList(face), new MatOfInt(0), new Mat(), hist, new MatOfInt(256), new MatOfFloat(0, 256));
-                Core.normalize(hist, hist, 0, 1, Core.NORM_MINMAX);
-                referenceHistograms.add(hist);
+        try {
+            // Load cascade XML from JAR
+            InputStream xmlStream = login.class.getResourceAsStream("/studentmanager/haarcascade_frontalface_default.xml");
+            if (xmlStream == null) {
+                System.err.println("Cascade XML not found in JAR.");
+                return;
             }
-        }
 
-        System.out.println("Loaded " + referenceHistograms.size() + " reference histograms.");
+            File tempFile = File.createTempFile("cascade", ".xml");
+            tempFile.deleteOnExit();
+
+            try (FileOutputStream out = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = xmlStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+
+            CascadeClassifier faceDetector = new CascadeClassifier(tempFile.getAbsolutePath());
+
+            // Load reference images from packaged folder
+            File folder = new File("src/studentmanager/images"); // Optional: replace with a resource-based loader later
+            File[] files = folder.listFiles();
+
+            if (files == null || files.length == 0) {
+                System.err.println("No reference images found.");
+                return;
+            }
+
+            for (File file : files) {
+                Mat img = Imgcodecs.imread(file.getAbsolutePath());
+                if (img.empty()) continue;
+
+                Mat gray = new Mat();
+                Imgproc.cvtColor(img, gray, Imgproc.COLOR_BGR2GRAY);
+
+                MatOfRect faces = new MatOfRect();
+                faceDetector.detectMultiScale(gray, faces);
+
+                for (Rect rect : faces.toArray()) {
+                    Mat face = new Mat(gray, rect);
+                    Mat hist = new Mat();
+                    Imgproc.calcHist(java.util.Arrays.asList(face), new MatOfInt(0), new Mat(), hist, new MatOfInt(256), new MatOfFloat(0, 256));
+                    Core.normalize(hist, hist, 0, 1, Core.NORM_MINMAX);
+                    referenceHistograms.add(hist);
+                }
+            }
+
+            System.out.println("Loaded " + referenceHistograms.size() + " reference histograms.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                "Error loading reference histograms:\n" + e.getMessage(),
+                "Face Detection Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     private BufferedImage matToBufferedImage(Mat mat) {
@@ -152,7 +180,7 @@ public class login extends javax.swing.JFrame {
                 // TODO: Open next JFrame here
                 //new Dashboard().setVisible(true);
                 new FaceCheck1().setVisible(true);
-                dispose();
+                //dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "This is not my boss, Mr Owami. Try again.");
                 new error().setVisible(true);
@@ -360,23 +388,34 @@ public class login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                System.load(new File("native/opencv_java4120.dll").getAbsolutePath());
-                /* Set the Nimbus look and feel */
-            try {
-                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                    if ("Nimbus".equals(info.getName())) {
-                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                        break;
+                try {
+                    // Get the JAR's location
+                    String jarPath = login.class.getProtectionDomain()
+                        .getCodeSource().getLocation().toURI().getPath();
+                    File jarDir = new File(jarPath).getParentFile();
+
+                    // Go up one level to project root
+                    File projectRoot = jarDir.getParentFile();
+                    File dll = new File(projectRoot, "native/opencv_java4120.dll");
+
+                    if (dll.exists()) {
+                        System.load(dll.getAbsolutePath());
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                            "OpenCV DLL not found:\n" + dll.getAbsolutePath(),
+                            "Startup Error", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null,
+                        "Error loading OpenCV:\n" + e.getMessage(),
+                        "Startup Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            }
 
-            /* Create and display the form */
-            java.awt.EventQueue.invokeLater(() -> new login().setVisible(true));
-
-            }
+                java.awt.EventQueue.invokeLater(() -> new login().setVisible(true));
+}
         });
     }
 
