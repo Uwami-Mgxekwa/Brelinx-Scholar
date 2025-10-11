@@ -16,6 +16,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +34,8 @@ public class login extends javax.swing.JFrame {
     public login() {
         initComponents();
         edits();
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/studentmanager/icons/BrelinxScholar.png"));
+        setIconImage(icon);
         cameraView = new javax.swing.JLabel();
         cameraView.setSize(320, 240); // You can adjust this size
         cameraView.setVisible(false);
