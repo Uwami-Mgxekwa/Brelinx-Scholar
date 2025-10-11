@@ -26,11 +26,11 @@ public class login extends javax.swing.JFrame {
     
     private javax.swing.JLabel cameraView;
     private List<Mat> referenceHistograms = new ArrayList<>();
-    private static final double THRESHOLD = 0.3;
+    private static final double THRESHOLD = 0.4;
     
     public login() {
         initComponents();
-        //edits();
+        edits();
         cameraView = new javax.swing.JLabel();
         cameraView.setSize(320, 240); // You can adjust this size
         cameraView.setVisible(false);
@@ -45,7 +45,7 @@ public class login extends javax.swing.JFrame {
     
     private void loadReferenceHistograms() {
         try {
-            // Load cascade XML from JAR
+            // Load cascade XML from inside the JAR
             InputStream xmlStream = login.class.getResourceAsStream("/studentmanager/haarcascade_frontalface_default.xml");
             if (xmlStream == null) {
                 System.err.println("Cascade XML not found in JAR.");
@@ -65,32 +65,36 @@ public class login extends javax.swing.JFrame {
 
             CascadeClassifier faceDetector = new CascadeClassifier(tempFile.getAbsolutePath());
 
-            // Load reference images from packaged folder
-            File folder = new File("src/studentmanager/images"); // Optional: replace with a resource-based loader later
-            File[] files = folder.listFiles();
+            // Load 1.jpg to 16.jpg from /studentmanager/images/ inside the JAR
+            for (int i = 1; i <= 16; i++) {
+                String imageName = String.format("images/%d.jpg", i);
+                try (InputStream imgStream = login.class.getResourceAsStream("/studentmanager/" + imageName)) {
+                    if (imgStream == null) {
+                        System.err.println("Missing image: " + imageName);
+                        continue;
+                    }
 
-            if (files == null || files.length == 0) {
-                System.err.println("No reference images found.");
-                return;
-            }
+                    byte[] data = imgStream.readAllBytes();
+                    Mat img = Imgcodecs.imdecode(new MatOfByte(data), Imgcodecs.IMREAD_COLOR);
+                    if (img.empty()) continue;
 
-            for (File file : files) {
-                Mat img = Imgcodecs.imread(file.getAbsolutePath());
-                if (img.empty()) continue;
+                    Mat gray = new Mat();
+                    Imgproc.cvtColor(img, gray, Imgproc.COLOR_BGR2GRAY);
 
-                Mat gray = new Mat();
-                Imgproc.cvtColor(img, gray, Imgproc.COLOR_BGR2GRAY);
+                    MatOfRect faces = new MatOfRect();
+                    faceDetector.detectMultiScale(gray, faces);
 
-                MatOfRect faces = new MatOfRect();
-                faceDetector.detectMultiScale(gray, faces);
-
-                for (Rect rect : faces.toArray()) {
-                    Mat face = new Mat(gray, rect);
-                    Mat hist = new Mat();
-                    Imgproc.calcHist(java.util.Arrays.asList(face), new MatOfInt(0), new Mat(), hist, new MatOfInt(256), new MatOfFloat(0, 256));
-                    Core.normalize(hist, hist, 0, 1, Core.NORM_MINMAX);
-                    referenceHistograms.add(hist);
-                }
+                    for (Rect rect : faces.toArray()) {
+                        Mat face = new Mat(gray, rect);
+                        Mat hist = new Mat();
+                        Imgproc.calcHist(java.util.Arrays.asList(face), new MatOfInt(0), new Mat(), hist, new MatOfInt(256), new MatOfFloat(0, 256));
+                        Core.normalize(hist, hist, 0, 1, Core.NORM_MINMAX);
+                        referenceHistograms.add(hist);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error loading image: " + imageName);
+                    e.printStackTrace();
+                }   
             }
 
             System.out.println("Loaded " + referenceHistograms.size() + " reference histograms.");
@@ -114,25 +118,57 @@ public class login extends javax.swing.JFrame {
     
     
     private void detectFace() {
-        
         new Thread(() -> {
-            VideoCapture camera = new VideoCapture(1);
-            if (!camera.isOpened()) {
-                JOptionPane.showMessageDialog(this, "Camera not accessible");
+            VideoCapture camera = new VideoCapture(0);
+            if (!camera.isOpened() || !camera.read(new Mat())) {
+                System.out.println("Camera 0 failed. Trying camera 1...");
+                camera.release();
+                camera = new VideoCapture(1);
+                if (!camera.isOpened() || !camera.read(new Mat())) {
+                    JOptionPane.showMessageDialog(this, "No accessible camera found.");
+                    return;
+                }
+            }
+
+            // Load cascade XML from JAR
+            InputStream xmlStream = login.class.getResourceAsStream("/studentmanager/haarcascade_frontalface_default.xml");
+            if (xmlStream == null) {
+                System.err.println("Cascade XML not found in JAR.");
                 return;
             }
 
-            CascadeClassifier faceDetector = new CascadeClassifier(new File("src/studentmanager/haarcascade_frontalface_default.xml").getAbsolutePath());
+            File tempFile;
+            try {
+                tempFile = File.createTempFile("cascade", ".xml");
+                tempFile.deleteOnExit();
+
+                try (FileOutputStream out = new FileOutputStream(tempFile)) {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = xmlStream.read(buffer)) != -1) {
+                        out.write(buffer, 0, bytesRead);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Failed to load cascade file.");
+                return;
+            }
+
+            CascadeClassifier faceDetector = new CascadeClassifier(tempFile.getAbsolutePath());
             if (faceDetector.empty()) {
                 System.err.println("Failed to load cascade classifier.");
                 return;
             }
+
+            // Continue with face detection logic...
             Mat frame = new Mat();
             boolean faceFound = false;
             long startTime = System.currentTimeMillis();
 
             while ((System.currentTimeMillis() - startTime) < 5000) {
                 camera.read(frame);
+                System.out.println("Frame read: " + !frame.empty());    
                 if (frame.empty()) continue;
 
                 Mat gray = new Mat();
@@ -144,7 +180,6 @@ public class login extends javax.swing.JFrame {
 
                 for (Rect rect : faces.toArray()) {
                     Mat faceROI = new Mat(gray, rect);
-
                     Mat hist = new Mat();
                     Imgproc.calcHist(java.util.Arrays.asList(faceROI), new MatOfInt(0), new Mat(), hist, new MatOfInt(256), new MatOfFloat(0, 256));
                     Core.normalize(hist, hist, 0, 1, Core.NORM_MINMAX);
@@ -177,10 +212,7 @@ public class login extends javax.swing.JFrame {
 
             if (faceFound) {
                 JOptionPane.showMessageDialog(this, "Welcome Mr Owami! Login successful.");
-                // TODO: Open next JFrame here
-                //new Dashboard().setVisible(true);
                 new FaceCheck1().setVisible(true);
-                //dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "This is not my boss, Mr Owami. Try again.");
                 new error().setVisible(true);
@@ -328,7 +360,7 @@ public class login extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 60, 310, 410));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 310, 410));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/images/1.png"))); // NOI18N
         jLabel3.setText("jLabel3");
