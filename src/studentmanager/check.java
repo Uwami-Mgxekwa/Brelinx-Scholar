@@ -19,10 +19,12 @@ public class check extends javax.swing.JFrame {
     }
     
     public void timer() {
-        new javax.swing.Timer(8000, e -> {
+        javax.swing.Timer timer = new javax.swing.Timer(3000, e -> {
             this.dispose();
-            //new FaceCheck1().setVisible(true);
-        }).start();
+            new Dashboard().setVisible(true);
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
     
     /**
@@ -37,11 +39,12 @@ public class check extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/images/correct.gif"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-120, 0, 680, 420));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/images/Success.gif"))); // NOI18N
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-130, 0, 650, 410));
 
         pack();
         setLocationRelativeTo(null);

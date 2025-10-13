@@ -30,7 +30,7 @@ public class Dashboard extends javax.swing.JFrame {
         try {
             loadDataToTable(); 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "SQL Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Database is off Mr Owami" );
         }
 }
     public void loadDataToTable() throws SQLException {
