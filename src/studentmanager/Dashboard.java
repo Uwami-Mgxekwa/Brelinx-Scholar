@@ -4,6 +4,8 @@
  */
 package studentmanager;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -27,6 +29,8 @@ public class Dashboard extends javax.swing.JFrame {
 
     public Dashboard() {
         initComponents();
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/studentmanager/icons/BrelinxScholar.png"));
+        setIconImage(icon);
         try {
             loadDataToTable(); 
         } catch (SQLException e) {

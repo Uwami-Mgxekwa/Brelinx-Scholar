@@ -4,6 +4,9 @@
  */
 package studentmanager;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+
 /**
  *
  * @author ZiloTech
@@ -15,14 +18,18 @@ public class FaceCheck1 extends javax.swing.JFrame {
      */
     public FaceCheck1() {
         initComponents();
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/studentmanager/icons/BrelinxScholar.png"));
+        setIconImage(icon);
         timer();
     }
 
     public void timer() {
-        new javax.swing.Timer(2400, e -> {
+        javax.swing.Timer timer = new javax.swing.Timer(2700, e -> {
             this.dispose();
-            
-        }).start();
+            new Dashboard().setVisible(true);
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
     /**

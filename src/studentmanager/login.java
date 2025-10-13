@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class login extends javax.swing.JFrame {
     
@@ -37,14 +38,13 @@ public class login extends javax.swing.JFrame {
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/studentmanager/icons/BrelinxScholar.png"));
         setIconImage(icon);
         cameraView = new javax.swing.JLabel();
-        cameraView.setSize(320, 240); // You can adjust this size
+        cameraView.setSize(320, 240);
         cameraView.setVisible(false);
         jPanel1.add(cameraView);
         new Thread(() -> {
             loadReferenceHistograms();
             System.out.println("Reference histograms loaded: " + referenceHistograms.size());
         }).start();
-        //System.out.println("Reference histograms loaded: " + referenceHistograms.size());
         
     }
     
@@ -217,7 +217,7 @@ public class login extends javax.swing.JFrame {
 
             if (faceFound) {
                 JOptionPane.showMessageDialog(this, "Welcome Mr Owami! Login successful.");
-                //new faceCheck().setVisible(true);
+                dispose();
                 new FaceCheck1().setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "This is not my boss, Mr Owami. Try again.");
@@ -486,6 +486,7 @@ public class login extends javax.swing.JFrame {
         String password = txtPassword.getText();
         
         if(username.equalsIgnoreCase("uwami") && password.equalsIgnoreCase("2004")){
+            dispose();
             new check().setVisible(true);
         }
         else{
