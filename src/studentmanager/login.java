@@ -217,6 +217,7 @@ public class login extends javax.swing.JFrame {
 
             if (faceFound) {
                 JOptionPane.showMessageDialog(this, "Welcome Mr Owami! Login successful.");
+                //new faceCheck().setVisible(true);
                 new FaceCheck1().setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "This is not my boss, Mr Owami. Try again.");
@@ -362,6 +363,11 @@ public class login extends javax.swing.JFrame {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("LOGIN");
         jLabel6.setOpaque(true);
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
 
         jLabel8.setBackground(new java.awt.Color(28, 0, 56));
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -473,6 +479,21 @@ public class login extends javax.swing.JFrame {
     private void jLabel8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseEntered
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel8MouseEntered
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        // TODO add your handling code here:
+        String username = txtUsername.getText();
+        String password = txtPassword.getText();
+        
+        if(username.equalsIgnoreCase("uwami") && password.equalsIgnoreCase("2004")){
+            new check().setVisible(true);
+        }
+        else{
+            new error().setVisible(true);
+        }
+        
+        
+    }//GEN-LAST:event_jLabel6MouseClicked
 
     /**
      * @param args the command line arguments

@@ -172,6 +172,9 @@
             <Property name="text" type="java.lang.String" value="LOGIN"/>
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel6MouseClicked"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value=" jLabel6 = new javax.swing.JLabel(&quot;LOGIN&quot;) {&#xa;    @Override&#xa;    protected void paintComponent(Graphics g) {&#xa;        Graphics2D g2 = (Graphics2D) g.create();&#xa;        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);&#xa;&#xa;        g2.setColor(getBackground());&#xa;        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);&#xa;&#xa;        // Let JLabel draw its text and icon&#xa;        super.paintComponent(g2);&#xa;&#xa;        g2.dispose();&#xa;    }&#xa;}"/>
             <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jLabel8.setOpaque(false);&#xa;jLabel8.setForeground(Color.WHITE);&#xa;jLabel8.setHorizontalAlignment(SwingConstants.CENTER);"/>
