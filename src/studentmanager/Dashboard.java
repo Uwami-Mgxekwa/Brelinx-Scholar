@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package studentmanager;
 
 import java.awt.Image;
@@ -451,7 +447,6 @@ public class Dashboard extends javax.swing.JFrame {
             // Remove the selected row
             model.removeRow(selectedRow);
         } else {
-            // No row selected
             JOptionPane.showMessageDialog(null, "Please select a row to remove.");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -466,9 +461,6 @@ public class Dashboard extends javax.swing.JFrame {
         importCSV();
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
