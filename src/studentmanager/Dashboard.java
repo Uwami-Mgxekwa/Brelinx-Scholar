@@ -28,8 +28,9 @@ public class Dashboard extends javax.swing.JFrame {
         setTitle("Dashboard");
         setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(44, 47, 51));
+        jPanel1.setBackground(new java.awt.Color(18, 24, 32));
 
+        jPanel2.setBackground(new java.awt.Color(31, 42, 56));
         jPanel2.setPreferredSize(new java.awt.Dimension(150, 80));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
