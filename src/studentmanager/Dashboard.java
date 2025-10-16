@@ -50,9 +50,11 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(31, 42, 56));
         jPanel2.setPreferredSize(new java.awt.Dimension(150, 80));
 
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Total Students");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("3,450");
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/graduationSmall.png"))); // NOI18N
@@ -130,12 +132,16 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel9.setText("Name");
 
         jLabel10.setBackground(new java.awt.Color(102, 255, 102));
+        jLabel10.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/addSmall.png"))); // NOI18N
         jLabel10.setText("ADD STUDENT");
         jLabel10.setOpaque(true);
 
         jLabel11.setBackground(new java.awt.Color(255, 102, 102));
+        jLabel11.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/removeSmall.png"))); // NOI18N
         jLabel11.setText("REMOVE STUDENT");
