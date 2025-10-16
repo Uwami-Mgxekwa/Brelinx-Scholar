@@ -124,7 +124,7 @@ public class login extends javax.swing.JFrame {
     
     private void detectFace() {
         new Thread(() -> {
-            VideoCapture camera = new VideoCapture(0);
+            VideoCapture camera = new VideoCapture(1);
             if (!camera.isOpened() || !camera.read(new Mat())) {
                 System.out.println("Camera 0 failed. Trying camera 1...");
                 camera.release();
