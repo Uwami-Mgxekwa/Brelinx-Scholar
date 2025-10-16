@@ -123,13 +123,17 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Add Student");
 
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Name");
 
-        jLabel7.setText("Name");
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Surname");
 
-        jLabel8.setText("Name");
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Course");
 
-        jLabel9.setText("Name");
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Email");
 
         jLabel10.setBackground(new java.awt.Color(102, 255, 102));
         jLabel10.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
