@@ -26,7 +26,7 @@ public class check extends javax.swing.JFrame {
     public void timer() {
         javax.swing.Timer timer = new javax.swing.Timer(3000, e -> {
             this.dispose();
-            new Dashboard().setVisible(true);
+            new FirstDash().setVisible(true);
         });
         timer.setRepeats(false);
         timer.start();

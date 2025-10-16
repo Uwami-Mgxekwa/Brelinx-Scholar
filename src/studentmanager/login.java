@@ -1,4 +1,3 @@
-
 package studentmanager;
 
 import java.awt.BasicStroke;
