@@ -2,9 +2,13 @@
 package studentmanager;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -117,14 +121,48 @@ public class Dashboard extends javax.swing.JFrame {
         courseField.setText("");
     }
     
-    public void removeStudent(){
+    public void removeStudent() {
         DefaultTableModel model = (DefaultTableModel) StudentTable.getModel();
         int selectedRow = StudentTable.getSelectedRow();
 
-        if (selectedRow != -1) {
-            model.removeRow(selectedRow);
-        } else {
-            JOptionPane.showMessageDialog(null, "Please select a row to remove.");
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a student to remove.");
+            return;
+        }
+
+        String name = model.getValueAt(selectedRow, 0).toString();
+        String surname = model.getValueAt(selectedRow, 1).toString();
+        String course = model.getValueAt(selectedRow, 2).toString();
+        String email = model.getValueAt(selectedRow, 3).toString();
+
+        model.removeRow(selectedRow);
+
+        String url = "jdbc:mysql://localhost:3306/courses";
+        String user = "root";
+        String password = "";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            String sql = "DELETE FROM course WHERE name = ? AND surname = ? AND course = ? AND email = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            pstmt.setString(2, surname);
+            pstmt.setString(3, course);
+            pstmt.setString(4, email);
+
+            int rowsAffected = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Student removed successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Student not found in database.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage());
         }
     }
     
@@ -174,7 +212,33 @@ public class Dashboard extends javax.swing.JFrame {
             }
         }
     }
+    
+    public void openWebsite() {
+        String url = "https://www.brelinx.com";
 
+        try {
+            // Check internet connectivity by pinging Google
+            URL testUrl = new URL("http://www.google.com");
+            HttpURLConnection conn = (HttpURLConnection) testUrl.openConnection();
+            conn.setConnectTimeout(3000); // 3 seconds timeout
+            conn.connect();
+
+            if (conn.getResponseCode() == 200) {
+                // Internet is available, try to open the website
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().browse(new URI(url));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Desktop browsing is not supported on this system.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No internet connection.");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "No internet connection or failed to open the website.");
+        }
+    }
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -224,6 +288,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
         jLabel29 = new javax.swing.JLabel();
+        jLabel31 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dashboard");
@@ -371,7 +436,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/addSmall.png"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/add1.png"))); // NOI18N
         jLabel10.setText("ADD STUDENT");
         jLabel10.setOpaque(true);
         jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -384,7 +449,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/removeSmall.png"))); // NOI18N
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/remove1.png"))); // NOI18N
         jLabel11.setText("REMOVE STUDENT");
         jLabel11.setOpaque(true);
         jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -397,7 +462,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel30.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         jLabel30.setForeground(new java.awt.Color(255, 255, 255));
         jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel30.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/removeSmall.png"))); // NOI18N
+        jLabel30.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/import1.png"))); // NOI18N
         jLabel30.setText("IMPORT CSV/TXT FILE");
         jLabel30.setOpaque(true);
         jLabel30.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -631,6 +696,13 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        jLabel31.setText("jLabel31");
+        jLabel31.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel31MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -649,7 +721,8 @@ public class Dashboard extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel31)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -678,7 +751,9 @@ public class Dashboard extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel31)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -722,6 +797,12 @@ public class Dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_StudentTableMouseClicked
+
+    private void jLabel31MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel31MouseClicked
+        // TODO add your handling code here:
+        openWebsite();
+        
+    }//GEN-LAST:event_jLabel31MouseClicked
 
     /**
      * @param args the command line arguments
@@ -786,6 +867,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
