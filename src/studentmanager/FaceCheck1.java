@@ -24,9 +24,9 @@ public class FaceCheck1 extends javax.swing.JFrame {
     }
 
     public void timer() {
-        javax.swing.Timer timer = new javax.swing.Timer(2700, e -> {
+        javax.swing.Timer timer = new javax.swing.Timer(2600, e -> {
             this.dispose();
-            new FirstDash().setVisible(true);
+            new Dashboard().setVisible(true);
         });
         timer.setRepeats(false);
         timer.start();

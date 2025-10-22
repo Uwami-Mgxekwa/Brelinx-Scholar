@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package studentmanager;
 
 import java.awt.Image;
@@ -26,7 +22,7 @@ public class check extends javax.swing.JFrame {
     public void timer() {
         javax.swing.Timer timer = new javax.swing.Timer(3000, e -> {
             this.dispose();
-            new FirstDash().setVisible(true);
+            new Dashboard().setVisible(true);
         });
         timer.setRepeats(false);
         timer.start();

@@ -49,7 +49,6 @@ public class login extends javax.swing.JFrame {
     
     private void loadReferenceHistograms() {
         try {
-            // Load cascade XML from inside the JAR
             InputStream xmlStream = login.class.getResourceAsStream("/studentmanager/haarcascade_frontalface_default.xml");
             if (xmlStream == null) {
                 System.err.println("Cascade XML not found in JAR.");
@@ -69,7 +68,6 @@ public class login extends javax.swing.JFrame {
 
             CascadeClassifier faceDetector = new CascadeClassifier(tempFile.getAbsolutePath());
 
-            // Load 1.jpg to 16.jpg from /studentmanager/images/ inside the JAR
             for (int i = 1; i <= 16; i++) {
                 String imageName = String.format("images/%d.jpg", i);
                 try (InputStream imgStream = login.class.getResourceAsStream("/studentmanager/" + imageName)) {
@@ -127,14 +125,13 @@ public class login extends javax.swing.JFrame {
             if (!camera.isOpened() || !camera.read(new Mat())) {
                 System.out.println("Camera 0 failed. Trying camera 1...");
                 camera.release();
-                camera = new VideoCapture(1);
+                camera = new VideoCapture(0);
                 if (!camera.isOpened() || !camera.read(new Mat())) {
                     JOptionPane.showMessageDialog(this, "No accessible camera found.");
                     return;
                 }
             }
 
-            // Load cascade XML from JAR
             InputStream xmlStream = login.class.getResourceAsStream("/studentmanager/haarcascade_frontalface_default.xml");
             if (xmlStream == null) {
                 System.err.println("Cascade XML not found in JAR.");
@@ -165,7 +162,6 @@ public class login extends javax.swing.JFrame {
                 return;
             }
 
-            // Continue with face detection logic...
             Mat frame = new Mat();
             boolean faceFound = false;
             long startTime = System.currentTimeMillis();

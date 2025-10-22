@@ -1,6 +1,21 @@
 
 package studentmanager;
 
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Uwami Mgxekwa
@@ -10,6 +25,154 @@ public class Dashboard extends javax.swing.JFrame {
     
     public Dashboard() {
         initComponents();
+        try {
+            loadDataToTable();
+            System.out.println("Database loaded successfully");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Database is off Mr Owami" );
+        }
+    }
+    
+    public void loadDataToTable() throws SQLException {
+        DefaultTableModel model = (DefaultTableModel) StudentTable.getModel();
+        model.setRowCount(0);
+
+        String url = "jdbc:mysql://localhost:3306/courses";
+        String user = "root";
+        String password = "";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, user, password);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM course");
+
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getString("name"),
+                    rs.getString("surname"),
+                    rs.getString("course"),
+                    rs.getString("email")
+                };
+                model.addRow(row);
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage());
+        }
+    }
+    
+    
+    
+    public void addStudents(){
+        DefaultTableModel model = (DefaultTableModel) StudentTable.getModel();
+
+        String name = nameField.getText().trim();
+        String surname = surnameField.getText().trim();
+        String course = courseField.getText().trim();
+        String email = emailField.getText().trim();
+
+        if (name.isEmpty() || surname.isEmpty() || course.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+            return;
+        }
+
+        model.addRow(new Object[]{
+            name,
+            surname,
+            course,
+            email
+        });
+
+        String url = "jdbc:mysql://localhost:3306/courses";
+        String user = "root";
+        String password = "";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            String sql = "INSERT INTO course (name, surname, course, email) VALUES (?, ?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            pstmt.setString(2, surname);
+            pstmt.setString(3, course);
+            pstmt.setString(4, email);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+
+            JOptionPane.showMessageDialog(null, "Student added successfully.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage());
+        }
+
+        nameField.setText("");
+        surnameField.setText("");
+        emailField.setText("");
+        courseField.setText("");
+    }
+    
+    public void removeStudent(){
+        DefaultTableModel model = (DefaultTableModel) StudentTable.getModel();
+        int selectedRow = StudentTable.getSelectedRow();
+
+        if (selectedRow != -1) {
+            model.removeRow(selectedRow);
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a row to remove.");
+        }
+    }
+    
+    public void importFromCSV(){
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                System.out.println("CSV vaild");
+                String line;
+                DefaultTableModel model = (DefaultTableModel) StudentTable.getModel();
+
+                Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/courses", "root", ""
+                );
+                String sql = "INSERT INTO course (name, surname, course, email) VALUES (?, ?, ?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+
+                    if (data.length != 4) continue;
+
+                    String name = data[0].trim();
+                    String surname = data[1].trim();
+                    String course = data[2].trim();
+                    String email = data[3].trim();
+
+                    model.addRow(new Object[]{name, surname, course, email});
+
+                    pstmt.setString(1, name);
+                    pstmt.setString(2, surname);
+                    pstmt.setString(3, course);
+                    pstmt.setString(4, email);
+                    pstmt.executeUpdate();
+                }
+
+                pstmt.close();
+                conn.close();
+                JOptionPane.showMessageDialog(null, "CSV imported successfully.");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error importing CSV: " + ex.getMessage());
+            }
+        }
     }
 
 
@@ -34,19 +197,20 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nameField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        surnameField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        courseField = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        emailField = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        StudentTable = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
@@ -59,6 +223,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dashboard");
@@ -209,6 +374,11 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/addSmall.png"))); // NOI18N
         jLabel10.setText("ADD STUDENT");
         jLabel10.setOpaque(true);
+        jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel10MouseClicked(evt);
+            }
+        });
 
         jLabel11.setBackground(new java.awt.Color(255, 102, 102));
         jLabel11.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
@@ -217,6 +387,24 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/removeSmall.png"))); // NOI18N
         jLabel11.setText("REMOVE STUDENT");
         jLabel11.setOpaque(true);
+        jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel11MouseClicked(evt);
+            }
+        });
+
+        jLabel30.setBackground(new java.awt.Color(51, 153, 255));
+        jLabel30.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabel30.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel30.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/removeSmall.png"))); // NOI18N
+        jLabel30.setText("IMPORT CSV/TXT FILE");
+        jLabel30.setOpaque(true);
+        jLabel30.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel30MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -225,18 +413,19 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel9)
-                            .addComponent(jTextField4)
+                            .addComponent(emailField)
                             .addComponent(jLabel8)
-                            .addComponent(jTextField3)
+                            .addComponent(courseField)
                             .addComponent(jLabel7)
-                            .addComponent(jTextField2)
+                            .addComponent(surnameField)
                             .addComponent(jLabel6)
-                            .addComponent(jTextField1)
+                            .addComponent(nameField)
                             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
@@ -248,24 +437,26 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(surnameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(courseField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel30)
+                .addContainerGap())
         );
 
         jPanel6.setBackground(new java.awt.Color(31, 42, 56));
@@ -274,18 +465,35 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel18.setForeground(new java.awt.Color(255, 255, 255));
         jLabel18.setText("Course Student ");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        StudentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Name", "Surname", "Course", "Email"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        StudentTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                StudentTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(StudentTable);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -411,6 +619,18 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
+        jLabel29.setBackground(new java.awt.Color(255, 0, 0));
+        jLabel29.setFont(new java.awt.Font("Segoe UI Black", 0, 16)); // NOI18N
+        jLabel29.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel29.setText("SIGN OUT");
+        jLabel29.setOpaque(true);
+        jLabel29.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel29MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -420,7 +640,8 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -441,8 +662,10 @@ public class Dashboard extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(17, 17, 17)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
@@ -473,6 +696,32 @@ public class Dashboard extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel29MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel29MouseClicked
+        // TODO add your handling code here:
+        new login().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jLabel29MouseClicked
+
+    private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
+        // TODO add your handling code here:
+        addStudents();
+    }//GEN-LAST:event_jLabel10MouseClicked
+
+    private void jLabel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseClicked
+        // TODO add your handling code here:
+        removeStudent();
+    }//GEN-LAST:event_jLabel11MouseClicked
+
+    private void jLabel30MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel30MouseClicked
+        // TODO add your handling code here:
+        importFromCSV();
+    }//GEN-LAST:event_jLabel30MouseClicked
+
+    private void StudentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StudentTableMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_StudentTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -510,6 +759,9 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable StudentTable;
+    private javax.swing.JTextField courseField;
+    private javax.swing.JTextField emailField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -531,7 +783,9 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -547,10 +801,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JTextField surnameField;
     // End of variables declaration//GEN-END:variables
 }
