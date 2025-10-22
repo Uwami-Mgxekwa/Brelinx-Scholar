@@ -213,28 +213,45 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }
     
+    
+    
+    
+    public void openLocalWebsite() {
+        try {
+            URL localUrl = getClass().getResource("/website/Brelinx/index.html");
+
+            if (localUrl != null && Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(localUrl.toURI());
+            } else {
+                JOptionPane.showMessageDialog(null, "Local website not found or desktop browsing not supported.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to open local website.");
+        }
+    }
+    
     public void openWebsite() {
-        String url = "https://www.brelinx.com";
+        String onlineUrl = "https://www.brelinx.com";
 
         try {
-            // Check internet connectivity by pinging Google
             URL testUrl = new URL("http://www.google.com");
             HttpURLConnection conn = (HttpURLConnection) testUrl.openConnection();
-            conn.setConnectTimeout(3000); // 3 seconds timeout
+            conn.setConnectTimeout(3000);
             conn.connect();
 
             if (conn.getResponseCode() == 200) {
-                // Internet is available, try to open the website
+                // Internet is available, open online site
                 if (Desktop.isDesktopSupported()) {
-                    Desktop.getDesktop().browse(new URI(url));
+                    Desktop.getDesktop().browse(new URI(onlineUrl));
                 } else {
-                    JOptionPane.showMessageDialog(null, "Desktop browsing is not supported on this system.");
+                    JOptionPane.showMessageDialog(null, "Desktop browsing is not supported.");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "No internet connection.");
+                openLocalWebsite();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "No internet connection or failed to open the website.");
+            System.out.println("error "+ex);
+            openLocalWebsite();
         }
     }
     
