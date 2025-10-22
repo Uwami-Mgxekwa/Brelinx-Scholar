@@ -214,8 +214,6 @@ public class Dashboard extends javax.swing.JFrame {
     }
     
     
-    
-    
     public void openLocalWebsite() {
         try {
             URL localUrl = getClass().getResource("/website/Brelinx/index.html");
@@ -240,7 +238,6 @@ public class Dashboard extends javax.swing.JFrame {
             conn.connect();
 
             if (conn.getResponseCode() == 200) {
-                // Internet is available, open online site
                 if (Desktop.isDesktopSupported()) {
                     Desktop.getDesktop().browse(new URI(onlineUrl));
                 } else {
