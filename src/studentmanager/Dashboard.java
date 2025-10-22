@@ -73,7 +73,7 @@ public class Dashboard extends javax.swing.JFrame {
     public void searchStudentsByName() {
         String searchName = search.getText().trim();
         DefaultTableModel model = (DefaultTableModel) StudentTable.getModel();
-        model.setRowCount(0); // Clear existing rows
+        model.setRowCount(0);
 
         String url = "jdbc:mysql://localhost:3306/courses";
         String user = "root";
@@ -105,21 +105,6 @@ public class Dashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Search error: " + e.getMessage());
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     public void addStudents(){
