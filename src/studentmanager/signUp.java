@@ -12,8 +12,52 @@ public class signUp extends javax.swing.JFrame {
         initComponents();
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/studentmanager/icons/BrelinxScholar.png"));
         setIconImage(icon);
+        focuse1();
+        
+        
     }
-
+    
+    public void focuse1(){
+        //first name
+        if (firstName.getText().equals("First name")) {
+            firstName.setText("");
+            firstName.setForeground(Color.BLACK);
+        }
+        if (firstName.getText().trim().isEmpty()) {
+            firstName.setForeground(Color.GRAY);
+            firstName.setText("First name");
+        }
+        //last name
+        if (lastName.getText().equals("Last name")) {
+            lastName.setText("");
+            lastName.setForeground(Color.BLACK);
+        }
+        if (lastName.getText().trim().isEmpty()) {
+            lastName.setForeground(Color.GRAY);
+            lastName.setText("Last name");
+        }
+        
+        //courses
+        if (course.getText().equals("Course")) {
+            course.setText("");
+            course.setForeground(Color.BLACK);
+        }
+        if (course.getText().trim().isEmpty()) {
+            course.setForeground(Color.GRAY);
+            course.setText("Course");
+        }
+        //email addresses
+        if (email.getText().equals("Email Address")) {
+            email.setText("");
+            email.setForeground(Color.BLACK);
+        }
+        if (email.getText().trim().isEmpty()) {
+            email.setForeground(Color.GRAY);
+            email.setText("Email Address");
+        }
+    }
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -86,11 +130,23 @@ public class signUp extends javax.swing.JFrame {
         jPanel1.add(firstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 80, 270, 30));
 
         course.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                courseFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 courseFocusLost(evt);
             }
         });
         jPanel1.add(course, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 200, 270, 30));
+
+        email.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                emailFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                emailFocusLost(evt);
+            }
+        });
         jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 260, 270, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, 430));
@@ -101,7 +157,7 @@ public class signUp extends javax.swing.JFrame {
 
     private void firstNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_firstNameFocusGained
         // TODO add your handling code here:
-        if (firstName.getText().equals("FIrst name")) {
+        if (firstName.getText().equals("First name")) {
             firstName.setText("");
             firstName.setForeground(Color.BLACK);
         }
@@ -113,7 +169,7 @@ public class signUp extends javax.swing.JFrame {
             firstName.setForeground(Color.GRAY);
             firstName.setText("First name");
         }
-
+        
     }//GEN-LAST:event_firstNameFocusLost
 
     private void lastNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lastNameFocusLost
@@ -127,7 +183,7 @@ public class signUp extends javax.swing.JFrame {
 
     private void lastNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lastNameFocusGained
         // TODO add your handling code here:
-        if (lastName.getText().equals("FIrst name")) {
+        if (lastName.getText().equals("Last name")) {
             lastName.setText("");
             lastName.setForeground(Color.BLACK);
         }
@@ -141,14 +197,30 @@ public class signUp extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_courseFocusLost
 
-    
-    public void focusGained(){
-        if (firstName.getText().equals("Enter first name")) {
-            firstName.setText("");
-            firstName.setForeground(Color.BLACK);
+    private void courseFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_courseFocusGained
+        // TODO add your handling code here:
+        if (course.getText().equals("Course")) {
+            course.setText("");
+            course.setForeground(Color.BLACK);
         }
-    }
-    
+    }//GEN-LAST:event_courseFocusGained
+
+    private void emailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_emailFocusGained
+        // TODO add your handling code here:
+        if (email.getText().equals("Email Address")) {
+            email.setText("");
+            email.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_emailFocusGained
+
+    private void emailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_emailFocusLost
+        // TODO add your handling code here:
+        if (email.getText().trim().isEmpty()) {
+            email.setForeground(Color.GRAY);
+            email.setText("Email Address");
+        }
+    }//GEN-LAST:event_emailFocusLost
+
     
     
     public static void main(String args[]) {
