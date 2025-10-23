@@ -4,6 +4,9 @@
  */
 package studentmanager;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+
 /**
  *
  * @author ZiloTech
@@ -15,6 +18,8 @@ public class signUp extends javax.swing.JFrame {
      */
     public signUp() {
         initComponents();
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/studentmanager/icons/BrelinxScholar.png"));
+        setIconImage(icon);
     }
 
     /**

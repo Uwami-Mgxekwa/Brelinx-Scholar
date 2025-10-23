@@ -3,6 +3,8 @@ package studentmanager;
 
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -29,6 +31,8 @@ public class Dashboard extends javax.swing.JFrame {
     
     public Dashboard() {
         initComponents();
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/studentmanager/icons/BrelinxScholar.png"));
+        setIconImage(icon);
         try {
             loadDataToTable();
             System.out.println("Database loaded successfully");
