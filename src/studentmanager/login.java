@@ -24,6 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
+import java.net.URI;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class login extends javax.swing.JFrame {
     
@@ -242,6 +250,49 @@ public class login extends javax.swing.JFrame {
         jLabel10.setBackground(new Color(48, 0, 96, 200));
         //jLabel10.setBorder(BorderFactory.createLineBorder(new Color(255, 0, 128), 2, true)); // Pink border, 2px, rounded
 
+    }
+    public void checkLogin(){
+        String username = txtUsername.getText().trim();
+        String password = txtPassword.getText().trim();
+
+        String url = "jdbc:mysql://localhost:3306/courses";
+        String dbUser = "root";
+        String dbPassword = "";
+
+        boolean loginSuccess = false;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+
+            String query = "SELECT * FROM users WHERE first_name = ? AND password = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password); 
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                loginSuccess = true;
+            }
+
+            rs.close();
+            pstmt.close();
+            conn.close();
+        } catch (Exception e) {
+            System.out.println("Database error: " + e.getMessage());
+            // fallback to hardcoded credentials
+            if (username.equalsIgnoreCase("uwami") && password.equalsIgnoreCase("2004")) {
+                loginSuccess = true;
+            }
+        }
+
+        if (loginSuccess) {
+            dispose();
+            new check().setVisible(true);
+        } else {
+            new error().setVisible(true);
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -482,16 +533,7 @@ public class login extends javax.swing.JFrame {
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         // TODO add your handling code here:
-        String username = txtUsername.getText();
-        String password = txtPassword.getText();
-        
-        if(username.equalsIgnoreCase("uwami") && password.equalsIgnoreCase("2004")){
-            dispose();
-            new check().setVisible(true);
-        }
-        else{
-            new error().setVisible(true);
-        }
+        checkLogin();
         
         
     }//GEN-LAST:event_jLabel6MouseClicked
