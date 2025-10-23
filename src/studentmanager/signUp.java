@@ -86,7 +86,6 @@ public class signUp extends javax.swing.JFrame {
         String emailAddress = email.getText().trim();
         String pass = password.getText().trim();
 
-        // Check for empty fields
         if (fName.isEmpty() || fName.equals("First name") ||
             lName.isEmpty() || lName.equals("Last name") ||
             courseName.isEmpty() || courseName.equals("Course") ||
@@ -101,7 +100,6 @@ public class signUp extends javax.swing.JFrame {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
 
-            // Check if email already exists
             String checkQuery = "SELECT * FROM users WHERE email = ?";
             PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setString(1, emailAddress);
@@ -110,18 +108,18 @@ public class signUp extends javax.swing.JFrame {
             if (rs.next()) {
                 JOptionPane.showMessageDialog(null, "Email already registered. Try logging in.");
             } else {
-                // Insert new user
                 String insertQuery = "INSERT INTO users (first_name, last_name, course, email, password) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
                 insertStmt.setString(1, fName);
                 insertStmt.setString(2, lName);
                 insertStmt.setString(3, courseName);
                 insertStmt.setString(4, emailAddress);
-                insertStmt.setString(5, pass); // ⚠️ Consider hashing this
+                insertStmt.setString(5, pass);
 
                 int rowsInserted = insertStmt.executeUpdate();
                 if (rowsInserted > 0) {
                     JOptionPane.showMessageDialog(null, "Account created successfully!");
+                    
                 } else {
                     JOptionPane.showMessageDialog(null, "Signup failed. Please try again.");
                 }
