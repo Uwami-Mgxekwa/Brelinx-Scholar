@@ -239,6 +239,9 @@
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="CREATE ACCOUNT"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel10MouseClicked"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="jLabel10 = new javax.swing.JLabel(&quot;CREATE ACCOUNT&quot;) {&#xa;    @Override&#xa;    protected void paintComponent(Graphics g) {&#xa;        Graphics2D g2 = (Graphics2D) g.create();&#xa;        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);&#xa;&#xa;        // Draw rounded background&#xa;        g2.setColor(getBackground());&#xa;        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);&#xa;&#xa;        // Draw rounded border&#xa;        g2.setColor(new Color(255, 0, 128)); // Pink border&#xa;        g2.setStroke(new BasicStroke(2));&#xa;        g2.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 20, 20);&#xa;&#xa;        // Draw label content&#xa;        super.paintComponent(g2);&#xa;        g2.dispose();&#xa;    }&#xa;}"/>
           </AuxValues>

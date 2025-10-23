@@ -1,5 +1,6 @@
 package studentmanager;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -24,6 +25,10 @@ public class signUp extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        lastName = new javax.swing.JTextField();
+        firstName = new javax.swing.JTextField();
+        course = new javax.swing.JTextField();
+        email = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -55,20 +60,97 @@ public class signUp extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/images/newSign.png"))); // NOI18N
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 330, 430));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Sign Up");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 30, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 10, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 430));
+        lastName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                lastNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                lastNameFocusLost(evt);
+            }
+        });
+        jPanel1.add(lastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 140, 270, 30));
+
+        firstName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                firstNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                firstNameFocusLost(evt);
+            }
+        });
+        jPanel1.add(firstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 80, 270, 30));
+
+        course.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                courseFocusLost(evt);
+            }
+        });
+        jPanel1.add(course, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 200, 270, 30));
+        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 260, 270, 30));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, 430));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
+    private void firstNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_firstNameFocusGained
+        // TODO add your handling code here:
+        if (firstName.getText().equals("FIrst name")) {
+            firstName.setText("");
+            firstName.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_firstNameFocusGained
+
+    private void firstNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_firstNameFocusLost
+        // TODO add your handling code here:
+        if (firstName.getText().trim().isEmpty()) {
+            firstName.setForeground(Color.GRAY);
+            firstName.setText("First name");
+        }
+
+    }//GEN-LAST:event_firstNameFocusLost
+
+    private void lastNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lastNameFocusLost
+        // TODO add your handling code here:
+        if (lastName.getText().trim().isEmpty()) {
+            lastName.setForeground(Color.GRAY);
+            lastName.setText("Last name");
+        }
+
+    }//GEN-LAST:event_lastNameFocusLost
+
+    private void lastNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lastNameFocusGained
+        // TODO add your handling code here:
+        if (lastName.getText().equals("FIrst name")) {
+            lastName.setText("");
+            lastName.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_lastNameFocusGained
+
+    private void courseFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_courseFocusLost
+        // TODO add your handling code here:
+        if (course.getText().trim().isEmpty()) {
+            course.setForeground(Color.GRAY);
+            course.setText("Course");
+        }
+    }//GEN-LAST:event_courseFocusLost
+
+    
+    public void focusGained(){
+        if (firstName.getText().equals("Enter first name")) {
+            firstName.setText("");
+            firstName.setForeground(Color.BLACK);
+        }
+    }
+    
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -102,6 +184,9 @@ public class signUp extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField course;
+    private javax.swing.JTextField email;
+    private javax.swing.JTextField firstName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -109,5 +194,6 @@ public class signUp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField lastName;
     // End of variables declaration//GEN-END:variables
 }
