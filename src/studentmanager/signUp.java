@@ -73,8 +73,10 @@ public class signUp extends javax.swing.JFrame {
         firstName = new javax.swing.JTextField();
         course = new javax.swing.JTextField();
         email = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -149,7 +151,15 @@ public class signUp extends javax.swing.JFrame {
         });
         jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 260, 270, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, 430));
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentmanager/icons/closeSign.png"))); // NOI18N
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+        });
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 0, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -221,6 +231,11 @@ public class signUp extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_emailFocusLost
 
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jLabel7MouseClicked
+
     
     
     public static void main(String args[]) {
@@ -265,6 +280,7 @@ public class signUp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField lastName;
     // End of variables declaration//GEN-END:variables
